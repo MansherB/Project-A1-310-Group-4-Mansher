@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Represents a product in the Grocerfy application including its attributes. 
+ * Represents a product in the Grocerfy application including its attributes.
  */
 @Entity
 @Table(name = "products")
@@ -16,7 +16,7 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long productId;
 
 	@Column(nullable = false, unique = true, length = 150)
 	private String productName;
@@ -45,8 +45,10 @@ public class Product {
 	protected Product() {
 	}
 
-	public Product(String productName, String brand, String category, String packageSize, boolean lactoseFree, boolean glutenFree, boolean vegetarian,
+	public Product(Long productId, String productName, String brand, String category, String packageSize,
+			boolean lactoseFree, boolean glutenFree, boolean vegetarian,
 			boolean vegan) {
+		this.productId = productId;
 		this.productName = productName;
 		this.brand = brand;
 		this.category = category;
@@ -57,12 +59,12 @@ public class Product {
 		this.vegan = vegan;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getProductId() {
+		return productId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 
 	public String getName() {

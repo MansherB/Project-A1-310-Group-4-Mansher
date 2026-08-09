@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Table to store information about different stores and their attributes. 
+ * Table to store information about different stores and their attributes.
  */
 @Entity
 @Table(name = "stores")
@@ -22,9 +22,6 @@ public class Store {
 	private String storeName;
 
 	@Column(nullable = false, length = 100)
-	private String city;
-
-	@Column(length = 100)
 	private String region;
 
 	@Column(length = 255)
@@ -33,9 +30,8 @@ public class Store {
 	protected Store() {
 	}
 
-	public Store(String storeName, String city, String region, String address) {
+	public Store(String storeName, String region, String address) {
 		this.storeName = storeName;
-		this.city = city;
 		this.region = region;
 		this.address = address;
 	}
@@ -56,14 +52,6 @@ public class Store {
 		this.storeName = storeName;
 	}
 
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
 	public String getRegion() {
 		return region;
 	}
@@ -82,8 +70,8 @@ public class Store {
 
 	public String getDisplayName() {
 		if (region == null || region.isBlank()) {
-			return storeName + " - " + city;
+			return storeName + " - " + region;
 		}
-		return storeName + " - " + city + ", " + region;
+		return storeName + " - " + region + ", " + region;
 	}
 }
