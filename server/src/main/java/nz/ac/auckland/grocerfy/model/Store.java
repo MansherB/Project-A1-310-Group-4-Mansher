@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Table to store information about different stores and their attributes. 
+ */
 @Entity
 @Table(name = "stores")
 public class Store {

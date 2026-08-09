@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Represents a product in the Grocerfy application including its attributes. 
+ */
 @Entity
 @Table(name = "products")
 public class Product {

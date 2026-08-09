@@ -13,6 +13,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+/**
+ * Create store price entities for different products and their store prices.
+ */
 @Entity
 @Table(name = "store_prices", uniqueConstraints = @UniqueConstraint(columnNames = { "product_id", "store_id" }))
 public class StorePrice {
