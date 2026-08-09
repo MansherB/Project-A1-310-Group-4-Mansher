@@ -2,8 +2,9 @@
 name: Bug report
 about: Report a bug for this project
 title: ''
-labels: '[Bug] '
+labels: bug
 assignees: ''
+
 ---
 
 ### Issue Summary
