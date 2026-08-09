@@ -16,10 +16,10 @@ public class Store {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long storeId;
 
 	@Column(nullable = false, unique = true, length = 150)
-	private String name;
+	private String storeName;
 
 	@Column(nullable = false, length = 100)
 	private String city;
@@ -33,27 +33,27 @@ public class Store {
 	protected Store() {
 	}
 
-	public Store(String name, String city, String region, String address) {
-		this.name = name;
+	public Store(String storeName, String city, String region, String address) {
+		this.storeName = storeName;
 		this.city = city;
 		this.region = region;
 		this.address = address;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getStoreId() {
+		return storeId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
 	}
 
-	public String getName() {
-		return name;
+	public String getStoreName() {
+		return storeName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 
 	public String getCity() {
@@ -82,8 +82,8 @@ public class Store {
 
 	public String getDisplayName() {
 		if (region == null || region.isBlank()) {
-			return name + " - " + city;
+			return storeName + " - " + city;
 		}
-		return name + " - " + city + ", " + region;
+		return storeName + " - " + city + ", " + region;
 	}
 }

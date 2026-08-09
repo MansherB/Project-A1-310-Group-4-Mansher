@@ -19,7 +19,7 @@ public class Product {
 	private Long id;
 
 	@Column(nullable = false, unique = true, length = 150)
-	private String name;
+	private String productName;
 
 	@Column(length = 100)
 	private String brand;
@@ -29,6 +29,9 @@ public class Product {
 
 	@Column(name = "package_size", length = 50)
 	private String packageSize;
+
+	@Column(nullable = false)
+	private boolean lactoseFree;
 
 	@Column(nullable = false)
 	private boolean glutenFree;
@@ -42,12 +45,13 @@ public class Product {
 	protected Product() {
 	}
 
-	public Product(String name, String brand, String category, String packageSize, boolean glutenFree, boolean vegetarian,
+	public Product(String productName, String brand, String category, String packageSize, boolean lactoseFree, boolean glutenFree, boolean vegetarian,
 			boolean vegan) {
-		this.name = name;
+		this.productName = productName;
 		this.brand = brand;
 		this.category = category;
 		this.packageSize = packageSize;
+		this.lactoseFree = lactoseFree;
 		this.glutenFree = glutenFree;
 		this.vegetarian = vegetarian;
 		this.vegan = vegan;
@@ -62,11 +66,11 @@ public class Product {
 	}
 
 	public String getName() {
-		return name;
+		return productName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 
 	public String getBrand() {
@@ -91,6 +95,14 @@ public class Product {
 
 	public void setPackageSize(String packageSize) {
 		this.packageSize = packageSize;
+	}
+
+	public boolean isLactoseFree() {
+		return lactoseFree;
+	}
+
+	public void setLactoseFree(boolean lactoseFree) {
+		this.lactoseFree = lactoseFree;
 	}
 
 	public boolean isGlutenFree() {
@@ -119,8 +131,8 @@ public class Product {
 
 	public String getDisplayName() {
 		if (brand == null || brand.isBlank()) {
-			return name;
+			return productName;
 		}
-		return brand + " " + name;
+		return brand + " " + productName;
 	}
 }
