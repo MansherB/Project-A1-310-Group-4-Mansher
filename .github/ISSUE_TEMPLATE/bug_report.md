@@ -1,8 +1,10 @@
-<!--
-Please utilize the template provided below to help us resolve your issue.
-
-Note that many issues can be resolved by updating to the latest version.
--->
+---
+name: Bug report
+about: Report a bug for this project
+title: '[Bug] '
+labels: ''
+assignees: ''
+---
 
 ### Issue Summary
 A summary of the issue and the environment in which it occurs. If suitable, include the steps required to reproduce the bug. Please feel free to include screenshots, screencasts, or code examples.
