@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Table to store information about different stores and their attributes. 
+ * Table to store information about different stores and their attributes.
  */
 @Entity
 @Table(name = "stores")
@@ -16,15 +16,12 @@ public class Store {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long storeId;
 
 	@Column(nullable = false, unique = true, length = 150)
-	private String name;
+	private String storeName;
 
 	@Column(nullable = false, length = 100)
-	private String city;
-
-	@Column(length = 100)
 	private String region;
 
 	@Column(length = 255)
@@ -33,35 +30,26 @@ public class Store {
 	protected Store() {
 	}
 
-	public Store(String name, String city, String region, String address) {
-		this.name = name;
-		this.city = city;
+	public Store(String storeName, String region, String address) {
+		this.storeName = storeName;
 		this.region = region;
 		this.address = address;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getStoreId() {
+		return storeId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
 	}
 
-	public String getName() {
-		return name;
+	public String getStoreName() {
+		return storeName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 
 	public String getRegion() {
@@ -82,8 +70,8 @@ public class Store {
 
 	public String getDisplayName() {
 		if (region == null || region.isBlank()) {
-			return name + " - " + city;
+			return storeName + " - " + region;
 		}
-		return name + " - " + city + ", " + region;
+		return storeName + " - " + region + ", " + region;
 	}
 }

@@ -22,7 +22,7 @@ public class StorePrice {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long storePriceId;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "product_id", nullable = false)
@@ -44,12 +44,12 @@ public class StorePrice {
 		this.price = price;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getStorePriceId() {
+		return storePriceId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setStorePriceId(Long storePriceId) {
+		this.storePriceId = storePriceId;
 	}
 
 	public Product getProduct() {
