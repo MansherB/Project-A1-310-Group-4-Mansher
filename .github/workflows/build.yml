@@ -36,6 +36,3 @@ jobs:
       - name: 'Build'
         working-directory: ./server
         run: ./mvnw -B install   # must be install, not verify — the action needs the .m2 artifacts + target dir
-
-      - name: 'Prepare Sonar analysis'
-        uses: evaristegalois11/sonar-fork-analysis@v1
