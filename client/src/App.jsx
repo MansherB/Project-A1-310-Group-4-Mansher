@@ -1,32 +1,71 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import DietaryFilterBar from './components/DietaryFilterBar'
 
 const emptyCartLine = { productId: '', quantity: 1 }
 
 function App() {
   const [products, setProducts] = useState([])
+  const [dietaryTags, setDietaryTags] = useState([])
   const [cartLines, setCartLines] = useState([{ ...emptyCartLine }])
   const [comparison, setComparison] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [catalogueLoading, setCatalogueLoading] = useState(true)
   const [error, setError] = useState('')
 
+  // The catalogue is pre-filled with the first product on the very first load
+  // only. Without this guard the basket would be reset every time a filter
+  // changed, because the effect below re-runs on each tag change.
+  const hasPrefilledBasket = useRef(false)
+
+  // Filtering happens server-side: /api/products carries no dietary flags, so
+  // the search endpoint from #14 is the only source that can apply the tags.
   useEffect(() => {
     let active = true
 
     async function loadProducts() {
+      setCatalogueLoading(true)
+
       try {
-        const response = await fetch('/api/products')
+        const params = new URLSearchParams()
+        dietaryTags.forEach((tag) => params.append('dietary', tag))
+        const suffix = params.toString() ? `?${params}` : ''
+
+        const response = await fetch(`/api/product${suffix}`)
         if (!response.ok) {
           throw new Error('Unable to load products.')
         }
 
         const data = await response.json()
-        if (active) {
-          setProducts(data)
-          setCartLines(data.length > 0 ? [{ productId: String(data[0].productId), quantity: 1 }] : [{ ...emptyCartLine }])
+        if (!active) {
+          return
+        }
+
+        setProducts(data)
+        setError('')
+
+        // A product already in the basket can fall outside the new filter.
+        // Issue #32 requires those to stop being selectable, so the line is
+        // cleared rather than left pointing at an option that is now absent.
+        const visibleIds = new Set(data.map((product) => product.productId))
+        setCartLines((currentLines) =>
+          currentLines.map((line) =>
+            line.productId === '' || visibleIds.has(Number(line.productId))
+              ? line
+              : { ...line, productId: '' },
+          ),
+        )
+
+        if (!hasPrefilledBasket.current && data.length > 0) {
+          hasPrefilledBasket.current = true
+          setCartLines([{ productId: String(data[0].productId), quantity: 1 }])
         }
       } catch (loadError) {
         if (active) {
           setError(loadError.message)
+        }
+      } finally {
+        if (active) {
+          setCatalogueLoading(false)
         }
       }
     }
@@ -36,7 +75,7 @@ function App() {
     return () => {
       active = false
     }
-  }, [])
+  }, [dietaryTags])
 
   const selectedProducts = useMemo(() => {
     const ids = new Set(cartLines.map((line) => Number(line.productId)).filter(Boolean))
@@ -47,6 +86,18 @@ function App() {
     () => cartLines.reduce((total, line) => total + Number(line.quantity || 0), 0),
     [cartLines],
   )
+
+  function toggleDietaryTag(tag) {
+    setDietaryTags((currentTags) =>
+      currentTags.includes(tag)
+        ? currentTags.filter((currentTag) => currentTag !== tag)
+        : [...currentTags, tag],
+    )
+  }
+
+  function clearDietaryTags() {
+    setDietaryTags([])
+  }
 
   function updateLine(index, field, value) {
     setCartLines((currentLines) =>
@@ -126,7 +177,38 @@ function App() {
         </div>
       </section>
 
-      <section className="panel grid">
+      <section className="panel grid filtered-grid">
+        <div className="catalog-column">
+          <DietaryFilterBar
+            selectedTags={dietaryTags}
+            onToggleTag={toggleDietaryTag}
+            onClear={clearDietaryTags}
+            matchCount={products.length}
+          />
+
+          <aside className="catalog-card">
+            <div className="section-heading">
+              <h2>Catalogue</h2>
+              <span>{products.length} products</span>
+            </div>
+
+            {catalogueLoading ? <p className="filter-summary">Loading catalogue...</p> : null}
+
+            {!catalogueLoading && products.length === 0 ? (
+              <p className="filter-summary">No products match every selected dietary tag.</p>
+            ) : null}
+
+            <ul className="catalog-list">
+              {products.map((product) => (
+                <li key={product.productId}>
+                  <strong>{product.displayName}</strong>
+                  <span>{product.productName}</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        </div>
+
         <form className="basket-form" onSubmit={handleSubmit}>
           <div className="section-heading">
             <h2>Basket</h2>
@@ -138,7 +220,11 @@ function App() {
               <div key={`${index}-${line.productId}`} className="basket-line">
                 <label>
                   Product
-                  <select value={line.productId} onChange={(event) => updateLine(index, 'productId', event.target.value)}>
+                  <select
+                    value={line.productId}
+                    onChange={(event) => updateLine(index, 'productId', event.target.value)}
+                    disabled={products.length === 0}
+                  >
                     <option value="">Select a product</option>
                     {products.map((product) => (
                       <option key={product.productId} value={product.productId}>
@@ -171,21 +257,6 @@ function App() {
 
           {error ? <p className="error-banner">{error}</p> : null}
         </form>
-
-        <aside className="catalog-card">
-          <div className="section-heading">
-            <h2>Catalogue</h2>
-            <span>{products.length} products</span>
-          </div>
-          <ul className="catalog-list">
-            {products.map((product) => (
-              <li key={product.productId}>
-                <strong>{product.displayName}</strong>
-                <span>{product.productName}</span>
-              </li>
-            ))}
-          </ul>
-        </aside>
       </section>
 
       {comparison ? (
