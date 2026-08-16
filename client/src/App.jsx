@@ -226,11 +226,23 @@ function App() {
                     disabled={products.length === 0}
                   >
                     <option value="">Select a product</option>
-                    {products.map((product) => (
-                      <option key={product.productId} value={product.productId}>
-                        {product.displayName}
-                      </option>
-                    ))}
+                    {products.map((product) => {
+                      const isSelectedElsewhere = cartLines.some(
+                        (otherLine, otherIndex) =>
+                          otherIndex !== index && String(otherLine.productId) === String(product.productId)
+                      )
+
+                      return (
+                        <option
+                          key={product.productId}
+                          value={product.productId}
+                          disabled={isSelectedElsewhere}
+                        >
+                          {product.displayName}
+                          {isSelectedElsewhere ? ' (Already added)' : ''}
+                        </option>
+                      )
+                    })}
                   </select>
                 </label>
 
