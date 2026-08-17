@@ -50,7 +50,7 @@ function App() {
     () => cartLines.reduce((total, line) => total + Number(line.quantity || 0), 0),
     [cartLines],
   )
-
+  
   function toggleDietaryTag(tag) {
     setDietaryTags((currentTags) =>
       currentTags.includes(tag)
@@ -114,6 +114,7 @@ function App() {
           onRemoveLine={removeLine}
           onUpdateLine={updateLine}
           onSubmit={handleSubmit}
+          setError={setError}
         />
       </section>
       
